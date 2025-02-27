@@ -1,20 +1,23 @@
+from dataclasses import dataclass
+
+
+@dataclass
 class InfoMessage:
     """
     Информационное сообщение о тренировке.
+
+    Args:
+            duration: часы
+            distance: км
+            speed: км/ч
+            calories: Ккал
     """
 
-    def __init__(self,
-                 training_type: str,
-                 duration: float,  # часов
-                 distance: float,  # км
-                 speed: float,  # км/ч
-                 calories: float,  # Ккал
-                 ):
-        self.training_type = training_type
-        self.duration = duration
-        self.distance = distance
-        self.speed = speed
-        self.calories = calories
+    training_type: float
+    duration: float
+    distance: float
+    speed: float
+    calories: float
 
     def get_message(self) -> str:
         """
@@ -33,11 +36,12 @@ class InfoMessage:
 class Training:
     """
     Базовый класс тренировки.
-    Содержит все основные свойства
-    и методы для тренировок.
+
+    Const:
+        LEN_STEP: метры
     """
 
-    LEN_STEP = 0.65  # метра
+    LEN_STEP = 0.65
     M_IN_KM = 1000
     MIN_IN_HOUR = 60
 
@@ -81,7 +85,8 @@ class Training:
                            self.duration,
                            self.get_distance(),
                            self.get_mean_speed(),
-                           self.get_spent_calories())
+                           self.get_spent_calories()
+                           )
 
 
 class Running(Training):
@@ -94,8 +99,7 @@ class Running(Training):
 
     def get_spent_calories(self) -> float:
         """
-        Переопределение метода расчета
-        калорий (Ккал).
+        (Ккал)
         """
         return ((self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
                  + self.CALORIES_MEAN_SPEED_SHIFT)
@@ -124,13 +128,17 @@ class SportsWalking(Training):
 
     def get_spent_calories(self) -> float:
         """
-        Переопределение метода
-        расчета калорий (Ккал).
+        (Ккал)
+
+        Args:
+            mean_speed_in_ms - перевод в м/с
+            hieght_in_m - перевод в метры
         """
-        return (self.A * self.weight
-                + ((self.get_mean_speed() * self.KMH_TO_MS)**2
-                / (self.height / self.SM_TO_M))
-                * self.B * self.weight) * self.duration * self.MIN_IN_HOUR
+        mean_speed_in_ms = self.get_mean_speed() * self.KMH_TO_MS
+        hieght_in_m = self.height / self.SM_TO_M
+        return ((self.A * self.weight
+                + (mean_speed_in_ms**2 / hieght_in_m)
+                * self.B * self.weight) * self.duration * self.MIN_IN_HOUR)
 
 
 class Swimming(Training):
@@ -155,16 +163,14 @@ class Swimming(Training):
 
     def get_spent_calories(self) -> float:
         """
-        Переопределение метода
-        расчета калорий (Ккал).
+        (Ккал)
         """
         return ((self.get_mean_speed() + self.C)
                 * self.D * self.weight * self.duration)
 
     def get_mean_speed(self) -> float:
         """
-        Переопределение расчета
-        сред-ей скорости (км/ч).
+        (км/ч)
         """
         return (self.length_pool * self.count_pool
                 / self.M_IN_KM / self.duration)
