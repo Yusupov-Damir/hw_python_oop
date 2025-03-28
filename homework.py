@@ -7,10 +7,10 @@ class InfoMessage:
     Информационное сообщение о тренировке.
 
     Args:
-            duration: часы
-            distance: км
-            speed: км/ч
-            calories: Ккал
+        duration: часы
+        distance: км
+        speed: км/ч
+        calories: Ккал
     """
 
     training_type: float
@@ -19,7 +19,7 @@ class InfoMessage:
     speed: float
     calories: float
 
-    def get_message(self) -> str:
+    def __str__(self):
         """
         Возвращает информацию о тренировке
         строкой.
@@ -38,7 +38,9 @@ class Training:
     Базовый класс тренировки.
 
     Const:
-        LEN_STEP: метры
+        LEN_STEP: один шаг, метры.
+        M_IN_KM: метров в Км.
+        MIN_IN_HOUR: минут в часе.
     """
 
     LEN_STEP = 0.65
@@ -92,6 +94,13 @@ class Training:
 class Running(Training):
     """
     Тренировка: бег.
+
+    Const:
+        CALORIES_MEAN_SPEED_MULTIPLIER,
+    CALORIES_MEAN_SPEED_SHIFT: эти константы
+    и формула расчета взяты из ТЗ без изменений.
+        M_IN_KM: метров в Км.
+        MIN_IN_HOUR: минут в часе.
     """
 
     CALORIES_MEAN_SPEED_MULTIPLIER = 18
@@ -110,6 +119,12 @@ class Running(Training):
 class SportsWalking(Training):
     """
     Тренировка: спортивная ходьба.
+
+    Const:
+        A, B: эти константы и формула
+    расчета взяты из ТЗ без изменений.
+        KMH_TO_MS: перевод Км/ч в м/с.
+        SM_TO_M: см в метре.
     """
 
     A = 0.035
@@ -144,6 +159,12 @@ class SportsWalking(Training):
 class Swimming(Training):
     """
     Тренировка: плавание.
+
+    Const:
+        C, D: эти константы и формула
+    расчета взяты из ТЗ без изменений.
+        LEN_STEP: преодолеваемое за один
+    гребок расстояние, метры.
     """
 
     LEN_STEP = 1.38
@@ -197,7 +218,7 @@ def main(training: Training) -> None:
     Главная функция.
     """
     info = training.show_training_info()
-    print(info.get_message())
+    print(info)
 
 
 if __name__ == '__main__':
